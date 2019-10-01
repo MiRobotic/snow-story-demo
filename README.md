@@ -1,10 +1,8 @@
-## 集成AAR文件使用说明
-### 第一步 导入aar文件
-##### 将aar文件添加到libs文件中
+## Integrated AAR file instructions 2 ### Step 1 Import the aar file 3 ##### Add aar file to libs file
 ```gradle
 implementation(name: 'csjsdk-beta', ext: 'aar')
 ```
-##### 在app的build.gradle文件的android{}结构下添加如下代码
+##### Add the following code under the android{} structure of the app's build.gradle file
 ```gradle
 repositories {
     flatDir {
@@ -12,19 +10,19 @@ repositories {
     }
 }
 ```
-### 第二步 引入依赖库
+### 第二步 Introducing dependent libraries
 ```gradle
 implementation 'io.netty:netty-all:4.1.23.Final'
 ```
 
-### 第三步 初始化
-##### 在Application中初始化SDK
+### Step 3 Initialization 19 
+##### Initializing the SDK in the Application
 ```java
 CsjRobot.getInstance().init(this);
 ```
-## 机器人功能使用说明
+## Robot function instructions
 
-### 注册机器人连接状态事件
+### Registering a robot connection status event
 ```java
        CsjRobot.getInstance().registerConnectListener(new OnConnectListener() {
             @Override
@@ -49,7 +47,7 @@ CsjRobot.getInstance().init(this);
         });
 ```
 
-### 注册机器人唤醒事件
+### Registering a robot wake event
 ```java
         CsjRobot.getInstance().registerWakeupListener(new OnWakeupListener() {
             @Override
@@ -73,7 +71,7 @@ CsjRobot.getInstance().init(this);
         });
 ```
 
-### 注册机器人语音识别事件
+### Registering a robot speech recognition event
 ```java
        // 语音识别
         CsjRobot.getInstance().registerSpeechListener(new OnSpeechListener() {
@@ -101,603 +99,596 @@ CsjRobot.getInstance().init(this);
         });
 ```
 
-### 注册机器人实时图像传输事件
+
+### Registering robot real-time image transmission events
 ```java
-        // 摄像头实时图片传输
+        // Camera real-time image transmission
         CsjRobot.getInstance().registerCameraListener(new OnCameraListener() {
             @Override
-            public void response(Bitmap bitmap) {
+            Public void response(Bitmap bitmap) {
 
             }
         });
 ```
 
-### 注册机器人综合人体检测事件
+
+### Registered robot integrated human detection event
 ```java
-        // 综合人体检测
+        // Comprehensive human detection
         CsjRobot.getInstance().registerDetectPersonListener(new OnDetectPersonListener() {
             @Override
-            public void response(int i) {
-                if(i == 0){ // 无人
-                    Log.d("TAG","registerDetectPersonListener:无人");
-                }else if(i == 1){ // 有人
-                    Log.d("TAG","registerDetectPersonListener:有人");
+            Public void response(int i) {
+                If(i == 0){ // no one
+                    Log.d("TAG","registerDetectPersonListener: no one");
+                }else if(i == 1){ // Someone
+                    Log.d("TAG","registerDetectPersonListener: someone");
                 }
             }
         });
 ```
 
-### 注册人脸信息事件
+### Register face information event
 ```java
-        // 人脸信息
-        CsjRobot.getInstance().registerFaceListener(new OnFaceListener() {
-            @Override
-            public void personInfo(String s) {
-                // 人脸识别到的会员信息(人脸一直在就会持续触发)
-                Log.d("TAG","registerFaceListener:s:"+s);
-            }
+        // face information
+        CsjRobot.getInstance().registerFaceListener(new OnFaceListener() {
+            @Override
+            Public void personInfo(String s) {
+                // Member information recognized by the face (the face will continue to trigger)
+                Log.d("TAG","registerFaceListener:s:"+s);
+            }
 
-            @Override
-            public void personNear(boolean b) {
+            @Override
+            Public void personNear(boolean b) {
 
-                if(b){// 有人脸靠近
-                    Log.d("TAG","registerFaceListener:有人脸靠近");
-                }else{// 人脸消失
-                    Log.d("TAG","registerFaceListener:人脸消失");
-                }
-            }
-        });
+                If(b){// people face close
+                    Log.d("TAG","registerFaceListener: face close");
+                }else{// face disappears
+                    Log.d("TAG","registerFaceListener: face disappears");
+                }
+            }
+        });
 ```
 
-### 注册机器人头部传感器事件(小雪)
+### Registered robot head sensor event (Xiaoxue)
 ```java
-        // 机器人头部传感器(小雪)
-        CsjRobot.getInstance().registerHeadTouchListener(new OnHeadTouchListener() {
-            @Override
-            public void response() {
-                Log.d("TAG","registerHeadTouchListener:头部传感器触发");
-            }
-        });
+        // Robot head sensor (small snow)
+        CsjRobot.getInstance().registerHeadTouchListener(new OnHeadTouchListener() {
+            @Override
+            Public void response() {
+                Log.d("TAG","registerHeadTouchListener: Head Sensor Trigger");
+            }
+        });
 ```
-
-### 机器人动作
+### Robot action
 ```java
-        // 机器人动作
-        Action action = CsjRobot.getInstance().getAction();
-
-        // 动作重置
-        action.reset();
-
-        // 肢体动作(bodyPart:肢体部位,action:对应动作)
-        action.action(2,6);// 低头
-
-        // 开始左右摆手(intervalTime:间隔时间)
-        action.startWaveHands(1000);
-
-        // 停止左右摆手
-        action.stopWaveHands();
-
-        // 开始跳舞
-        action.startDance();
-
-        // 停止跳舞
-        action.stopDance();
-
-        // 获取当前机器人的位置信息
-        action.getPosition(new OnPositionListener() {
-            @Override
-            public void positionInfo(String s) {
-                // 返回json
-                /*{
-                    "msg_id":"NAVI_GET_CURPOS_RSP",
-                        "x":”0”,
-                    "y":”0”,
-                    "z":”0”,
-                    "rotation":”0”,
-                    "error_code":0
-                  }*/
-            }
-        });
-
-        // 移动方法(direction:方向 0:前 1:后 2:左 3:右)
-        // 移动距离较短
-        action.move(0);
-
-        // 导航方法(机器人导航到某个点)
-        String json = "";
-        /*{
-                    "x":2,
-                    "y":1,
-                    "z":0,
-                    "rotation":30
-                 }*/
-        action.navi(json, new OnNaviListener() {
-            @Override
-            public void moveResult(String s) {
-                // 到达后通知
-            }
-
-            @Override
-            public void messageSendResult(String s) {
-                // 导航消息发送成功后的通知
-            }
-
-            @Override
-            public void cancelResult(String s) {
-
-            }
-
-            @Override
-            public void goHome() {
-
-            }
-        });
-
-        // 机器人取消当前导航
-        action.cancelNavi(new OnNaviListener() {
-            @Override
-            public void moveResult(String s) {
-
-            }
-
-            @Override
-            public void messageSendResult(String s) {
-
-            }
-
-            @Override
-            public void cancelResult(String s) {
-                // 机器人取消导航通知
-            }
-
-            @Override
-            public void goHome() {
-
-            }
-        });
-
-        // 转至特定角度()
-        action.goAngle(180);
-
-        // 步进角度(Rotation>0:向左转，Rotation<0:向右转)
-        action.moveAngle(180, new OnGoRotationListener() {
-            @Override
-            public void response(int i) {
-                // 到达角度通知
-            }
-        });
-
-        // 回去充电
-        action.goHome(new OnNaviListener() {
-            @Override
-            public void moveResult(String s) {
-
-            }
-
-            @Override
-            public void messageSendResult(String s) {
-
-            }
-
-            @Override
-            public void cancelResult(String s) {
-
-            }
-
-            @Override
-            public void goHome() {
-                // 充电通知
-            }
-        });
-
-        // 保存当前机器人的地图信息
-        action.saveMap();
-
-        // 加载保存的机器人地图信息
-        action.loadMap();
-
-        // 机器人速度设置(0.1-0.7,默认0.5)
-        action.setSpeed(0.6f);
-
-        // 导航状态查询
-        action.search(new OnNaviSearchListener() {
-            @Override
-            public void searchResult(String s) {
-                /*{
-                    "msg_id":"NAVI_GET_STATUS_RSP",
-                     "state":0,
-                     "error_code":0
-                  }*/
-                // state:0空闲,1:正在导航
-            }
-        });
-
-        // 点头动作
-        action.nodAction();
-
-        // 小雪右臂摆动
-        action.snowRightArm();
-
-        // 小雪左臂摆动
-        action.snowLeftArm();
-
-        // 小雪双臂摆动
-        action.snowDoubleArm();
-
-        // 爱丽丝抬头
-        action.AliceHeadUp();
-
-        // 爱丽丝头低头
-        action.AliceHeadDown();
-
-        // 爱丽丝头部重置
-        action.AliceHeadHReset();
-
-        // 爱丽丝左手臂抬起
-        action.AliceLeftArmUp();
-
-        // 爱丽丝左手臂放下
-        action.AliceLeftArmDown();
-
-        // 爱丽丝右手臂抬起
-        action.AliceRightArmUp();
-
-        // 爱丽丝右手臂放下
-        action.AliceRightArmDown();
-
-        // 小雪左臂摆动次数
-        action.SnowLeftArmSwing(20);
-
-        // 小雪右臂摆动次数
-        action.SnowRightArmSwing(20);
-
-        // 小雪双臂摆动次数
-        action.SnowDoubleArmSwing(20);
-
-        // 向左转
-        action.turnLeft(new OnGoRotationListener() {
-            @Override
-            public void response(int i) {
-                // 完成通知
-            }
-        });
-
-        // 向右转
-        action.turnRight(new OnGoRotationListener() {
-            @Override
-            public void response(int i) {
-                // 完成通知
-            }
-        });
-
-        // 向左移动
-        action.moveLeft();
-
-        // 向右移动
-        action.moveRight();
-
-        // 前进
-        action.moveForward();
-
-        // 后退
-        action.moveBack();
-```
-
-### TTS(语音合成)
-```java
-        // 机器人TTS
-        ISpeechSpeak speak = CsjRobot.getInstance().getTts();
-
-        // 开始说话
-        speak.startSpeaking("你好呀！", new OnSpeakListener() {
-            @Override
-            public void onSpeakBegin() {
-                // 说话前
-            }
-
-            @Override
-            public void onCompleted(SpeechError speechError) {
-                // 说话完成
-            }
-        });
-
-        // 停止说话
-        speak.stopSpeaking();
-
-        // 暂停说话
-        speak.pauseSpeaking();
-
-        // 重新说话
-        speak.resumeSpeaking();
-
-        // 是否正在说话
-        speak.isSpeaking();
-
-        // 也可以使用自己实现的TTS(继承自ISpeechSpeak接口)
-        CsjRobot.getInstance().setTts(null);
-```
-
-### 语音识别
-```java
-        // 机器人语音
-        Speech speech = CsjRobot.getInstance().getSpeech();
-
-        // 开启讯飞语音服务(默认开启，无需操作)
-        speech.startSpeechService();
-
-        // 关闭讯飞语音服务
-        speech.closeSpeechService();
-
-        // 开启多次识别
-        speech.startIsr();
-
-        // 关闭多次识别
-        speech.stopIsr();
-
-        // 开启单次识别
-        speech.startOnceIsr();
-
-        // 关闭单次识别
-        speech.stopOnceIsr();
-
-        // 手动唤醒机器人
-        speech.openMicro();
-
-        // 手动去获取问题的答案
-        speech.getResult("你叫什么名字？", new OnSpeechGetResultListener() {
-            @Override
-            public void response(String s) {
-
-            }
-        });
-```
-
-### 人脸识别信息
-```java
-        // 机器人人脸识别
-        Face face = CsjRobot.getInstance().getFace();
-
-        // 打开摄像头(打开视频流传输 默认开启)
-        face.openVideo();
-
-        // 关闭摄像头
-        face.closeVideo();
-
-        // 启动人脸识别服务(默认开启)
-        face.startFaceService();
-
-        // 关闭人脸识别服务
-        face.closeFaceService();
-
-
-        // 摄像头拍照
-        face.snapshot(new OnSnapshotoListener() {
-            @Override
-            public void response(String s) {
-                /*
-                * {
-                    "error_code": 0,
-                    "face_position": 0,
-                    "msg_id":”FACE_SNAPSHOT_RESULT_RSP"
-                    } */
-                // erro_code : 0表示有人脸 其他表示无人脸
-            }
-        });
-
-        // 人脸注册(保存当前拍照的人脸)
-        face.saveFace("张三", new OnFaceSaveListener() {
-            @Override
-            public void response(String s) {
-                /*
-                * {
-                    "msg_id":"FACE_SAVE_RSP",
-                    “person_id”:”personx20170107161021mRJOVw”,
-                       “error_code":0
-                   }*/
-
-                // error_cdoe : 0 成功 , 40002 人脸已经注册,40003 人脸姓名格式错误
-            }
-        });
-
-        // 人脸信息删除
-        face.faceDel("faceId");
-
-        // 人脸信息批量删除
-        face.faceDelList("faceIdsJson");
-
-        // 获取所有人脸数据库
-        face.getFaceDatabase(new OnGetAllFaceListener() {
-            @Override
-            public void personList(String s) {
-                // s
-            }
-        });
-```
-
-### 机器人状态
-```java
-        // 机器人状态
-        State state = CsjRobot.getInstance().getState();
-
-        // 机器人的连接状态
-        state.isConnect();
-
-        // 机器人的电量值
-        state.getElectricity();
-
-        // 机器人当前充电状态
-        state.getChargeState();
-
-        // 机器人关机
-        state.shutdown();
-
-        // 机器人重启
-        state.reboot();
-
-        // 获取机器人电量信息
-        state.getBattery(new OnRobotStateListener() {
-            @Override
-            public void getBattery(int i) {
-                // 返回的电量值
-            }
-
-            @Override
-            public void getCharge(int i) {
-
-            }
-        });
-
-        // 获取机器人的充电状态
-        state.getCharge(new OnRobotStateListener() {
-            @Override
-            public void getBattery(int i) {
-
-            }
-
-            @Override
-            public void getCharge(int i) {
-                // 返回的充电状态
-            }
-        });
-
-
-        // 机器人检查信息
-        state.checkSelf(new OnWarningCheckSelfListener() {
-            @Override
-            public void response(String s) {
-                // 返回机器人的检查信息
-            }
-        });
-
-        // 手动获取综合人体检测的信息
-        state.getPerson(new OnDetectPersonListener() {
-            @Override
-            public void response(int i) {
-                // 返回的状态
-                // i==0 无人 i==1 有人
-            }
-        });
+        // robot action
+        Action action = CsjRobot.getInstance().getAction();
+
+        // action reset
+        Action.reset();
+
+        // Limb movement (bodyPart: limb part, action: corresponding action)
+        Action.action(2,6);// bow
+
+        // Start swinging around (intervalTime: interval)
+        action.startWaveHands(1000);
+
+        // stop swinging left and right
+        action.stopWaveHands();
+
+        // start dancing
+        action.startDance();
+
+        // stop dancing
+        action.stopDance();
+
+        / / Get the current robot's location information
+        action.getPosition(new OnPositionListener() {
+            @Override
+            Public void positionInfo(String s) {
+                // return json
+                /*{
+                    "msg_id": "NAVI_GET_CURPOS_RSP",
+                        "x": "0",
+                    "y": "0",
+                    "z": "0",
+                    "rotation": "0",
+                    "error_code": 0
+                  }*/
+            }
+        });
+
+        / / Move method (direction: direction 0: before 1: after 2: left 3: right)
+        // shorter moving distance
+        Action.move(0);
+
+        // navigation method (the robot navigates to a point)
+        String json = "";
+        /*{
+                    "x": 2,
+                    "y": 1,
+                    "z": 0,
+                    "rotation": 30
+                 }*/
+        Action.navi(json, new OnNaviListener() {
+            @Override
+            Public void moveResult(String s) {
+                // notification after arrival
+            }
+
+            @Override
+            Public void messageSendResult(String s) {
+                // Notification after the navigation message is successfully sent
+            }
+
+            @Override
+            Public void cancelResult(String s) {
+
+            }
+
+            @Override
+            Public void goHome() {
+
+            }
+        });
+
+        // The robot cancels the current navigation
+        action.cancelNavi(new OnNaviListener() {
+            @Override
+            Public void moveResult(String s) {
+
+            }
+
+            @Override
+            Public void messageSendResult(String s) {
+
+            }
+
+            @Override
+            Public void cancelResult(String s) {
+                // Robot cancels navigation notification
+            }
+
+            @Override
+            Public void goHome() {
+
+            }
+        });
+
+        // Go to a specific angle ()
+        action.goAngle(180);
+
+        // Step angle (Rotation>0: turn left, Rotation<0: turn right)
+        action.moveAngle(180, new OnGoRotationListener() {
+            @Override
+            Public void response(int i) {
+                // arrival angle notification
+            }
+        });
+
+      // Go back to charging
+        action.goHome(new OnNaviListener() {
+            @Override
+            Public void moveResult(String s) {
+
+            }
+
+            @Override
+            Public void messageSendResult(String s) {
+
+            }
+
+            @Override
+            Public void cancelResult(String s) {
+
+            }
+
+            @Override
+            Public void goHome() {
+                // charging notification
+            }
+        });
+
+        // save the map information of the current robot
+        action.saveMap();
+
+        / / Load the saved robot map information
+        action.loadMap();
+
+        // Robot speed setting (0.1-0.7, default 0.5)
+        action.setSpeed(0.6f);
+
+        // Navigation status query
+        Action.search(new OnNaviSearchListener() {
+            @Override
+            Public void searchResult(String s) {
+                /*{
+                    "msg_id": "NAVI_GET_STATUS_RSP",
+                     "state": 0,
+                     "error_code": 0
+                  }*/
+                // state: 0 is idle, 1: is navigating
+            }
+        });
         
-        // 获取机器人的SN信息
-        state.getSN(new OnSNListener() {
-            @Override
-            public void response(String s) {
-                // 返回的SN信息
-            }
-        });
+       // Nodding action
+        action.nodAction();
+
+        // Xiao Xue’s right arm swings
+        action.snowRightArm();
+
+        // Xiaoxue left arm swing
+        action.snowLeftArm();
+
+        // Small snow arms swinging
+        action.snowDoubleArm();
+
+        // Alice looks up
+        action.AliceHeadUp();
+
+        // Alice heads down
+        action.AliceHeadDown();
+
+        // Alice head reset
+        action.AliceHeadHReset();
+
+        // Alice lifts her left arm
+        action.AliceLeftArmUp();
+
+        // Alice puts her left arm down
+        action.AliceLeftArmDown();
+
+        // Alice lifts her right arm
+        action.AliceRightArmUp();
+
+        // Alice puts her right arm down
+        action.AliceRightArmDown();
+
+        // Xiaoxue left arm swing times
+        action.SnowLeftArmSwing(20);
+
+        // Xiaoxue right arm swing times
+        action.SnowRightArmSwing(20);
+
+        // Small snow arms swings
+        action.SnowDoubleArmSwing(20);
+
+        // turn left
+        action.turnLeft(new OnGoRotationListener() {
+            @Override
+            Public void response(int i) {
+                // complete the notification
+            }
+        });
+
+        // turn right
+        action.turnRight(new OnGoRotationListener() {
+            @Override
+            Public void response(int i) {
+                // complete the notification
+            }
+        });
+
+     // move to the left
+        action.moveLeft();
+
+        // move to the right
+        action.moveRight();
+
+        // go ahead
+        action.moveForward();
+
+        // back
+        action.moveBack();
 ```
 
-### 机器人表情
+### TTS (speech synthesis)
 ```java
-        // 机器人表情
-        Expression expression = CsjRobot.getInstance().getExpression();
+        // Robot TTS
+        ISpeechSpeak speak = CsjRobot.getInstance().getTts();
 
-        // 获取机器人表情
-        expression.getExpression(new OnExpressionListener() {
-            @Override
-            public void response(int i) {
-                // 返回的表情
-            }
-        });
+        // start speaking
+        speak.startSpeaking("Hello!", new OnSpeakListener() {
+            @Override
+            Public void onSpeakBegin() {
+                // Before you speak
+            }
 
-        // 开心
-        expression.happy();
+            @Override
+            Public void onCompleted(SpeechError speechError) {
+                // speak is complete
+            }
+        });
 
-        // 悲伤
-        expression.sadness();
+        // Stop talking
+        speak.stopSpeaking();
 
-        // 惊讶
-        expression.surprised();
+        // pause talking
+        speak.pauseSpeaking();
 
-        // 微笑
-        expression.smile();
+        // Re-talk
+        speak.resumeSpeaking();
 
-        // 正常
-        expression.normal();
+        // Is it talking?
+        speak.isSpeaking();
 
-        // 愤怒
-        expression.angry();
-
-        // 闪电
-        expression.lightning();
-
-        // 困倦
-        expression.sleepiness();
+        // You can also use your own implementation of TTS (inherited from ISpeechSpeak interface)
+        CsjRobot.getInstance().setTts(null);
 ```
-
-### 机器人版本
+### Speech Recognition
 ```java
-        // 机器人版本信息
-        Version version = CsjRobot.getInstance().getVersion();
+        // robot voice
+        Speech speech = CsjRobot.getInstance().getSpeech();
 
-        // 获取机器人版本信息
-        version.getVersion(new OnGetVersionListener() {
-            @Override
-            public void response(String s) {
-                // 返回的版本信息
-            }
-        });
+        // Turn on the SMS service (it is enabled by default, no need to operate)
+        speech.startSpeechService();
 
-        // 底层软件检查
-        version.softwareCheck(new OnUpgradeListener() {
-            @Override
-            public void checkRsp(int i) {
-                if (i == 60002) {//已是最新版本
+        // Close the Xunfei voice service
+        speech.closeSpeechService();
 
-                } else if (i == 60001) {//没有获取到版本信息，请检查网络
+        // turn on multiple recognitions
+        speech.startIsr();
 
-                } else if (i == 0) {//正常更新
+        // turn off multiple recognition
+        speech.stopIsr();
 
-                }
-            }
+        // Turn on single recognition
+        speech.startOnceIsr();
 
-            @Override
-            public void upgradeRsp(int i) {
+        / / Turn off single recognition
+        speech.stopOnceIsr();
 
-            }
+        // Manually wake up the robot
+        speech.openMicro();
 
-            @Override
-            public void upgradeProgress(int i) {
+        // Manually get the answer to the question
+        speech.getResult("What is your name?", new OnSpeechGetResultListener() {
+            @Override
+            Public void response(String s) {
 
-            }
-        });
-
-
-        // 底层软件更新
-        version.softwareUpgrade(new OnUpgradeListener() {
-            @Override
-            public void checkRsp(int i) {
-
-            }
-
-            @Override
-            public void upgradeRsp(int i) {
-
-            }
-
-            @Override
-            public void upgradeProgress(int i) {
-                // 更新进度
-            }
-        });
+            }
+        });
 ```
-
-### 其他功能
+### Face recognition information
 ```java
-        // 其他功能
-        Extra extra = CsjRobot.getInstance().getExtra();
+        // Robot face recognition
+        Face face = CsjRobot.getInstance().getFace();
 
-        // 获取机器人的热词列表
-        extra.getHotWords(new OnHotWordsListener() {
-            @Override
-            public void hotWords(List<String> list) {
-                // 返回的热词列表
-            }
-        });
+        // Turn on the camera (turn on video streaming by default)
+        face.openVideo();
 
-        // 设置热词功能
-        extra.setHotWords(null);
+        // turn off the camera
+        face.closeVideo();
 
-        // 恢复出厂设置
-        extra.resetRobot();
+        // Start face recognition service (default is enabled)
+        face.startFaceService();
+
+        // Close the face recognition service
+        face.closeFaceService();
+
+
+        // camera photo
+        Face.snapshot(new OnSnapshotoListener() {
+            @Override
+            Public void response(String s) {
+                /*
+                * {
+                    "error_code": 0,
+                    "face_position": 0,
+                    "msg_id":"FACE_SNAPSHOT_RESULT_RSP"
+                    } */
+                // erro_code : 0 means someone face, other means no face
+            }
+        });
+        // Face registration (save the face of the current photo)
+        face.saveFace("张三", new OnFaceSaveListener() {
+            @Override
+            Public void response(String s) {
+                /*
+                * {
+                    "msg_id": "FACE_SAVE_RSP",
+                    "person_id": "personx20170107161021mRJOVw",
+                       "error_code": 0
+                   }*/
+
+                // error_cdoe : 0 success, 40002 face is registered, 40003 face name format is wrong
+            }
+        });
+
+        // face information deletion
+        face.faceDel("faceId");
+
+        // Face information bulk deletion
+        face.faceDelList("faceIdsJson");
+
+        // Get all face databases
+        face.getFaceDatabase(new OnGetAllFaceListener() {
+            @Override
+            Public void personList(String s) {
+                // s
+            }
+        });
+```
+### Robot Status
+```java
+        // Robot status
+        State state = CsjRobot.getInstance().getState();
+
+        // The connection status of the robot
+        state.isConnect();
+
+        // The power value of the robot
+        state.getElectricity();
+
+        // The current state of charge of the robot
+        state.getChargeState();
+
+        // Robot shuts down
+        State.shutdown();
+
+        // Robot restart
+        State.reboot();
+
+        // Get robot battery information
+        state.getBattery(new OnRobotStateListener() {
+            @Override
+            Public void getBattery(int i) {
+                // returned power value
+            }
+
+            @Override
+            Public void getCharge(int i) {
+
+            }
+        });
+
+       / / Get the robot's state of charge
+        state.getCharge(new OnRobotStateListener() {
+            @Override
+            Public void getBattery(int i) {
+
+            }
+
+            @Override
+            Public void getCharge(int i) {
+                // returned state of charge
+            }
+        });
+
+
+        // Robot check information
+        state.checkSelf(new OnWarningCheckSelfListener() {
+            @Override
+            Public void response(String s) {
+                / / Return to the robot's inspection information
+            }
+        });
+
+        / / Manually obtain comprehensive human detection information
+        state.getPerson(new OnDetectPersonListener() {
+            @Override
+            Public void response(int i) {
+                // returned status
+                // i==0 no one i==1 someone
+            }
+        });
+        
+        // Get the SN information of the robot
+        state.getSN(new OnSNListener() {
+            @Override
+            Public void response(String s) {
+                // returned SN information
+            }
+        });
+```
+### Robot Emoticons
+```java
+        // robot expression
+        Expression expression = CsjRobot.getInstance().getExpression();
+
+        // Get the robot expression
+        expression.getExpression(new OnExpressionListener() {
+            @Override
+            Public void response(int i) {
+                // returned expression
+            }
+        });
+
+        // happy
+        Expression.happy();
+
+        // sad
+        Expression.sadness();
+
+        // Surprised
+        Expression.surprised();
+
+        // smile
+        Expression.smile();
+
+        // normal
+        Expression.normal();
+
+        // angry
+        Expression.angry();
+
+        // lightning
+        Expression.lightning();
+
+        // sleepy
+        Expression.sleepiness();
+```
+### Robot version
+```java
+        // Robot version information
+        Version version = CsjRobot.getInstance().getVersion();
+
+        / / Get robot version information
+        version.getVersion(new OnGetVersionListener() {
+            @Override
+            Public void response(String s) {
+                // returned version information
+            }
+        });
+
+        // The underlying software check
+        version.softwareCheck(new OnUpgradeListener() {
+            @Override
+            Public void checkRsp(int i) {
+                If (i == 60002) {// is the latest version
+
+                } else if (i == 60001) {//No version information is obtained, please check the network
+
+                } else if (i == 0) {//Normal update
+
+                }
+            }
+
+            @Override
+            Public void upgradeRsp(int i) {
+
+            }
+
+            @Override
+            Public void upgradeProgress(int i) {
+
+            }
+        });
+
+       // Underlying software update
+        version.softwareUpgrade(new OnUpgradeListener() {
+            @Override
+            Public void checkRsp(int i) {
+
+            }
+
+            @Override
+            Public void upgradeRsp(int i) {
+
+            }
+
+            @Override
+            Public void upgradeProgress(int i) {
+                // update progress
+            }
+        });
+```
+### Other functions
+```java
+        // Other functions
+        Extra extra = CsjRobot.getInstance().getExtra();
+
+        // Get the list of hot words for the robot
+        extra.getHotWords(new OnHotWordsListener() {
+            @Override
+            Public void hotWords(List<String> list) {
+                // list of hot words returned
+            }
+        });
+
+        / / Set the hot word function
+        extra.setHotWords(null);
+
+        // reset
+        extra.resetRobot();
 ```
