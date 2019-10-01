@@ -1,11 +1,10 @@
-package com.demo.csjbot.csjsdkdemo;
+package com.mirobotic.story.demo;
 
 import android.graphics.Bitmap;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.csjbot.coshandler.core.Action;
@@ -16,10 +15,8 @@ import com.csjbot.coshandler.core.Face;
 import com.csjbot.coshandler.core.Speech;
 import com.csjbot.coshandler.core.State;
 import com.csjbot.coshandler.core.Version;
-import com.csjbot.coshandler.global.REQConstants;
 import com.csjbot.coshandler.listener.OnCameraListener;
 import com.csjbot.coshandler.listener.OnDetectPersonListener;
-import com.csjbot.coshandler.listener.OnDeviceInfoListener;
 import com.csjbot.coshandler.listener.OnExpressionListener;
 import com.csjbot.coshandler.listener.OnFaceListener;
 import com.csjbot.coshandler.listener.OnFaceSaveListener;
@@ -44,13 +41,14 @@ import com.csjbot.coshandler.log.CsjlogProxy;
 import com.csjbot.coshandler.tts.ISpeechSpeak;
 import com.google.gson.Gson;
 import com.iflytek.cloud.SpeechError;
+import com.mirobotic.story.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class DemoActivity extends AppCompatActivity {
 
     CsjRobot mCsjBot;
 
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.demo_main);
 
         mCsjBot = CsjRobot.getInstance();
 
@@ -105,14 +103,14 @@ public class MainActivity extends AppCompatActivity {
                 if(Speech.SPEECH_RECOGNITION_RESULT == i){ // 识别到的信息
                     try {
                         String text = new JSONObject(s).getString("text");
-                        Toast.makeText(MainActivity.this, "识别到的文本:"+text, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DemoActivity.this, "识别到的文本:"+text, Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }else if(Speech.SPEECH_RECOGNITION_AND_ANSWER_RESULT == i){// 识别到的信息与的回答
                     try {
                         String say = new JSONObject(s).getJSONObject("result").getJSONObject("data").getString("say");
-                        Toast.makeText(MainActivity.this, "获取的答案信息:"+say, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DemoActivity.this, "获取的答案信息:"+say, Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

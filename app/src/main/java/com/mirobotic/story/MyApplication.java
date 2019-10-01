@@ -1,4 +1,4 @@
-package com.demo.csjbot.csjsdkdemo;
+package com.mirobotic.story;
 
 import android.app.Application;
 

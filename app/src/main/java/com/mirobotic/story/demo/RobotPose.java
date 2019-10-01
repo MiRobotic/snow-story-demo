@@ -1,4 +1,4 @@
-package com.demo.csjbot.csjsdkdemo;
+package com.mirobotic.story.demo;
 
 public class RobotPose {
     private String poseName;
