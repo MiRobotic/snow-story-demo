@@ -1,3 +1,17 @@
 <resources>
-    <string name="app_name">CsjSDKDemo</string>
+    <string name="app_name">Hospital App</string>
+    <string name="sing">SING\n唱歌</string>
+    <string name="story">TELL STORY\n讲故事</string>
+    <string name="dance_start">START DANCE\n跳舞</string>
+    <string name="dance_stop">STOP DANCE\n跳舞</string>
+
+    <string name="lang_mandarin">MANDARIN\n普通话</string>
+    <string name="lang_cantonese">CANTONESE\n广东话</string>
+    <string name="lang_english">ENGLISH\n英语</string>
+    <string name="lang_hokkien">HOKKIEN \n福建</string>
+    <string name="select_language">SELECT LANGUAGE</string>
+    <string name="title">请告诉我或选择语言</string>
+    <string name="file_name">File Name</string>
+
+
 </resources>

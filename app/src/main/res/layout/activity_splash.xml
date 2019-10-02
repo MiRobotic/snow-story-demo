@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white2"
+    tools:context=".ui.activities.SplashActivity">
+
+    <ImageView
+        android:scaleType="fitXY"
+        android:src="@drawable/pattern_blue_cut"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/music_player_height"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/space_large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        tools:ignore="UseCompoundDrawables">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="103dp"
+            android:gravity="center"
+            android:text="Welcome to ElderlyHome"
+            android:textColor="@color/gray_dark"
+            android:textSize="@dimen/text_title"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/menu_img_height"
+            android:src="@drawable/elderlyimage"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+
+
+</FrameLayout>

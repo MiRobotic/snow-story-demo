@@ -14,9 +14,9 @@ public class DemoSplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.demo_splash);
-        if(CsjRobot.getInstance().getState().isConnect()){
+        if (CsjRobot.getInstance().getState().isConnect()) {
             startActivity(new Intent(DemoSplashActivity.this, DemoActivity.class));
-        }else{
+        } else {
             CsjRobot.getInstance().registerConnectListener(new OnConnectListener() {
                 @Override
                 public void success() {

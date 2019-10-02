@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/db1_root"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    tools:ignore="ContentDescription"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_small"
+        android:layout_gravity="center"
+        android:src="@drawable/kshwlogo"/>
+
+    <!-- -->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="@dimen/lang_btn_size"
+                android:layout_marginTop="@dimen/space_large"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/lang_buttons_margin"
+                android:orientation="vertical">
+
+
+                <Button
+                    android:id="@+id/btnMan"
+                    android:text="@string/lang_mandarin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/space_small"
+                    android:textSize="@dimen/text_title"
+                    android:background="@drawable/roundbutton" />
+
+                <Button
+                    android:id="@+id/btnCan"
+                    android:text="@string/lang_cantonese"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_large"
+                    android:padding="@dimen/space_small"
+                    android:textSize="@dimen/text_title"
+                    android:background="@drawable/roundbutton"/>
+
+                <Button
+                    android:id="@+id/btnHokk"
+                    android:text="@string/lang_hokkien"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/space_large"
+                    android:textSize="@dimen/text_title"
+                    android:padding="@dimen/space_small"
+                    android:background="@drawable/roundbutton" />
+
+                <Button
+                    android:id="@+id/btnEng"
+                    android:text="@string/lang_english"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_large"
+                    android:textSize="@dimen/text_title"
+                    android:padding="@dimen/space_small"
+                    android:background="@drawable/roundbutton"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvSelectLang"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/select_language"
+                    android:textColor="@color/Black"
+                    android:padding="@dimen/space_large"
+                    android:textSize="@dimen/text_title" />
+
+
+                <TextView
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title"
+                    android:textSize="@dimen/text_title"
+                    android:textColor="@color/Black" />
+
+
+                <ImageView
+                    android:layout_width="@dimen/home_image_width"
+                    android:layout_height="@dimen/home_image_height"
+                    android:layout_marginTop="@dimen/size_small"
+                    android:src="@drawable/front" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </ScrollView>
+</LinearLayout>
+

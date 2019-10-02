@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:ignore="ContentDescription"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/music_player_height">
+
+
+
+    <ImageView
+        android:id="@+id/imgAlbum"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/space_large"
+        android:src="@drawable/ic_music_player"
+        android:layout_width="@dimen/playing_album"
+        android:layout_height="@dimen/playing_album"/>
+
+
+    <ImageView
+        android:id="@+id/imgClose"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_cancel"
+        android:layout_marginTop="@dimen/space_normal"
+        android:layout_marginEnd="@dimen/space_large"
+        android:layout_width="@dimen/size_small"
+        android:layout_height="@dimen/size_small"/>
+
+    <TextView
+        android:id="@+id/tvFileName"
+        android:layout_toStartOf="@id/imgClose"
+        android:layout_toEndOf="@id/imgAlbum"
+        android:textSize="@dimen/text_large"
+        android:layout_width="match_parent"
+        android:layout_marginEnd="@dimen/space_large"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="marquee"/>
+
+    <RelativeLayout
+        android:id="@+id/progressView"
+        android:layout_toEndOf="@id/imgAlbum"
+        android:layout_below="@id/tvFileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/space_normal"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvSeekBarTitle"
+            android:background="@drawable/button_blue"
+            android:layout_marginTop="@dimen/space_large"
+            android:paddingStart="@dimen/space_small"
+            android:paddingEnd="@dimen/space_small"
+            android:layout_alignStart="@+id/seekBar"
+            android:textColor="@color/white"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_small"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_marginStart="@dimen/space_normal"
+            android:layout_marginEnd="@dimen/space_normal"
+            android:layout_marginTop="@dimen/space_normal"
+            android:layout_marginBottom="@dimen/space_large"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_below="@id/tvSeekBarTitle"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone"/>
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_below="@id/tvSeekBarTitle"
+            android:layout_marginStart="@dimen/space_normal"
+            android:layout_marginEnd="@dimen/space_normal"
+            android:layout_marginBottom="@dimen/space_large"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+
+        <TextView
+            android:id="@+id/tvTimeStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/seekBar"
+            android:textSize="@dimen/text_small"
+            android:text="00:00"
+            android:visibility="gone"
+            android:layout_alignStart="@+id/seekBar"
+            android:layout_marginTop="-16dp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tvTimeEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/seekBar"
+            android:layout_alignEnd="@+id/seekBar"
+            android:textSize="@dimen/text_small"
+            android:layout_marginTop="-16dp"
+            android:layout_marginEnd="0dp"/>
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_toEndOf="@id/imgAlbum"
+        android:layout_below="@id/progressView">
+
+
+        <ImageView
+            android:id="@+id/btnPrev"
+            android:src="@drawable/ic_previous_track"
+            android:padding="@dimen/space_small"
+            android:layout_marginStart="@dimen/space_small"
+            android:layout_marginEnd="@dimen/space_small"
+            android:layout_width="@dimen/music_controls"
+            android:layout_height="@dimen/music_controls"/>
+
+        <ImageView
+            android:id="@+id/btnRewind"
+            android:src="@drawable/ic_rewind"
+            android:padding="@dimen/space_small"
+            android:layout_marginStart="@dimen/space_small"
+            android:layout_marginEnd="@dimen/space_small"
+            android:layout_width="@dimen/music_controls"
+            android:layout_height="@dimen/music_controls"/>
+
+        <ImageView
+            android:id="@+id/btnPlay"
+            android:src="@drawable/ic_play_button"
+            android:padding="@dimen/space_small"
+            android:layout_marginStart="@dimen/space_small"
+            android:layout_marginEnd="@dimen/space_small"
+            android:layout_width="@dimen/music_controls"
+            android:layout_height="@dimen/music_controls"/>
+
+        <ImageView
+            android:id="@+id/btnForward"
+            android:src="@drawable/ic_fast_forward"
+            android:padding="@dimen/space_small"
+            android:layout_marginStart="@dimen/space_small"
+            android:layout_marginEnd="@dimen/space_small"
+            android:layout_width="@dimen/music_controls"
+            android:layout_height="@dimen/music_controls"/>
+
+        <ImageView
+            android:id="@+id/btnNext"
+            android:src="@drawable/ic_next_track_button"
+            android:padding="@dimen/space_small"
+            android:layout_marginStart="@dimen/space_small"
+            android:layout_marginEnd="@dimen/space_small"
+            android:layout_width="@dimen/music_controls"
+            android:layout_height="@dimen/music_controls"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
+

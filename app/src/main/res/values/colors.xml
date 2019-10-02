@@ -3,4 +3,34 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+<!--    <color name="colorPrimary">#008577</color>-->
+<!--    <color name="colorPrimaryDark">#00574B</color>-->
+<!--    <color name="colorAccent">#D81B60</color>-->
+
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="windowBackground">#FFFFFF</color>
+    <color name="navigationBarColor">#000000</color>
+
+    <color name="transparent">#0054b0f3</color>
+    <color name="yellow">#fdd700</color>
+    <color name="green">#0a0</color>
+    <color name="green_dark">#070</color>
+    <color name="red">#ffff4444</color>
+    <color name="red_dark">#ffcc0000</color>
+    <color name="white">#ffffff</color>
+    <color name="gray_light">#aaffffff</color>
+    <color name="blue_light">#d3dcf8</color>
+    <color name="gray_dark">#777</color>
+    <color name="blue">#54b0f3</color>
+    <color name="Black">#000000</color>
+
+    <!--// colors for table view-->
+    <color name="bg_line">#E7E7E7</color>
+    <color name="bg_color">#FF99DCD7</color>
+
+    <color name="cell_background_color">#ffffff</color>
+    <color name="cell_text_color">#1f1f1f</color>
+    <color name="header_line_color">@android:color/holo_red_light</color>
+    <color name="white2">#aadddddd</color>
 </resources>

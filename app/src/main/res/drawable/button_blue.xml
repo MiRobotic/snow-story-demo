@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+
+            <!-- view background color -->
+            <solid android:color="@color/colorPrimaryDark"/>
+
+            <!-- view border color and width -->
+
+
+            <!-- If you want to add some padding -->
+
+
+            <!-- Here is the corner radius -->
+            <corners android:radius="20dp"/>
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+
+            <!-- view background color -->
+            <solid android:color="#483D8B"/>
+
+            <!-- view border color and width -->
+
+
+            <!-- If you want to add some padding -->
+
+
+            <!-- Here is the corner radius -->
+            <corners android:radius="20dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+
+            <!-- view background color -->
+            <solid android:color="@color/blue"/>
+
+            <!-- view border color and width -->
+
+
+            <!-- If you want to add some padding -->
+
+
+            <!-- Here is the corner radius -->
+            <corners android:radius="20dp"/>
+        </shape>
+    </item>
+</selector>

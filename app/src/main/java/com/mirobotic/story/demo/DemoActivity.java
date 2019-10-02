@@ -61,6 +61,7 @@ public class DemoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.demo_main);
 
+
         mCsjBot = CsjRobot.getInstance();
 
         // 每次开机连接机器人之后要加载地图
@@ -70,8 +71,8 @@ public class DemoActivity extends AppCompatActivity {
         mCsjBot.registerWakeupListener(new OnWakeupListener() {
             @Override
             public void response(int i) {
-                Log.d("TAG","registerWakeupListener:i:"+i);
-                mCsjBot.getTts().startSpeaking("我在呢!",null);
+                Log.d("TAG", "registerWakeupListener:i:" + i);
+                mCsjBot.getTts().startSpeaking("我在呢!", null);
                 mCsjBot.getAction().moveAngle(i, new OnGoRotationListener() {
                     @Override
                     public void response(int i) {
@@ -79,12 +80,12 @@ public class DemoActivity extends AppCompatActivity {
                             if (i <= 180) {
                                 CsjlogProxy.getInstance().debug("向左转:+" + i);
                                 if (mCsjBot.getState().getChargeState() == State.NOT_CHARGING) {
-                                    mCsjBot.getAction().moveAngle(i,null);
+                                    mCsjBot.getAction().moveAngle(i, null);
                                 }
                             } else {
                                 CsjlogProxy.getInstance().debug("向右转:-" + (360 - i));
                                 if (mCsjBot.getState().getChargeState() == State.NOT_CHARGING) {
-                                    mCsjBot.getAction().moveAngle(-(360 - i),null);
+                                    mCsjBot.getAction().moveAngle(-(360 - i), null);
                                 }
                             }
                         }
@@ -99,18 +100,18 @@ public class DemoActivity extends AppCompatActivity {
             public void speechInfo(String s, int i) {
 
                 // 简单解析示例
-                Log.d("TAG","registerSpeechListener:s:"+s);
-                if(Speech.SPEECH_RECOGNITION_RESULT == i){ // 识别到的信息
+                Log.d("TAG", "registerSpeechListener:s:" + s);
+                if (Speech.SPEECH_RECOGNITION_RESULT == i) { // 识别到的信息
                     try {
                         String text = new JSONObject(s).getString("text");
-                        Toast.makeText(DemoActivity.this, "识别到的文本:"+text, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DemoActivity.this, "识别到的文本:" + text, Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }else if(Speech.SPEECH_RECOGNITION_AND_ANSWER_RESULT == i){// 识别到的信息与的回答
+                } else if (Speech.SPEECH_RECOGNITION_AND_ANSWER_RESULT == i) {// 识别到的信息与的回答
                     try {
                         String say = new JSONObject(s).getJSONObject("result").getJSONObject("data").getString("say");
-                        Toast.makeText(DemoActivity.this, "获取的答案信息:"+say, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DemoActivity.this, "获取的答案信息:" + say, Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -130,10 +131,10 @@ public class DemoActivity extends AppCompatActivity {
         mCsjBot.registerDetectPersonListener(new OnDetectPersonListener() {
             @Override
             public void response(int i) {
-                if(i == 0){ // 无人
-                    Log.d("TAG","registerDetectPersonListener:无人");
-                }else if(i == 1){ // 有人
-                    Log.d("TAG","registerDetectPersonListener:有人");
+                if (i == 0) { // 无人
+                    Log.d("TAG", "registerDetectPersonListener:无人");
+                } else if (i == 1) { // 有人
+                    Log.d("TAG", "registerDetectPersonListener:有人");
                 }
             }
         });
@@ -143,16 +144,16 @@ public class DemoActivity extends AppCompatActivity {
             @Override
             public void personInfo(String s) {
                 // 人脸识别到的会员信息(人脸一直在就会持续触发)
-                Log.d("TAG","registerFaceListener:s:"+s);
+                Log.d("TAG", "registerFaceListener:s:" + s);
             }
 
             @Override
             public void personNear(boolean b) {
 
-                if(b){// 有人脸靠近
-                    Log.d("TAG","registerFaceListener:有人脸靠近");
-                }else{// 人脸消失
-                    Log.d("TAG","registerFaceListener:人脸消失");
+                if (b) {// 有人脸靠近
+                    Log.d("TAG", "registerFaceListener:有人脸靠近");
+                } else {// 人脸消失
+                    Log.d("TAG", "registerFaceListener:人脸消失");
                 }
             }
         });
@@ -161,7 +162,7 @@ public class DemoActivity extends AppCompatActivity {
         mCsjBot.registerHeadTouchListener(new OnHeadTouchListener() {
             @Override
             public void response() {
-                Log.d("TAG","registerHeadTouchListener:头部传感器触发");
+                Log.d("TAG", "registerHeadTouchListener:头部传感器触发");
             }
         });
 
@@ -192,7 +193,7 @@ public class DemoActivity extends AppCompatActivity {
                 mCsjBot.getAction().getPosition(new OnPositionListener() {
                     @Override
                     public void positionInfo(String s) {
-                        Log.d("TAG","OnPositionListener:s:"+s);
+                        Log.d("TAG", "OnPositionListener:s:" + s);
                         try {
                             JSONObject jsonObject = new JSONObject(s);
                             String rotation = jsonObject.getString("rotation");
@@ -222,7 +223,7 @@ public class DemoActivity extends AppCompatActivity {
                 mCsjBot.getAction().getPosition(new OnPositionListener() {
                     @Override
                     public void positionInfo(String s) {
-                        Log.d("TAG","OnPositionListener:s:"+s);
+                        Log.d("TAG", "OnPositionListener:s:" + s);
                         try {
                             JSONObject jsonObject = new JSONObject(s);
                             String rotation = jsonObject.getString("rotation");
@@ -249,18 +250,18 @@ public class DemoActivity extends AppCompatActivity {
         findViewById(R.id.bt_navi_point1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(robotPose1 == null){
+                if (robotPose1 == null) {
                     return;
                 }
                 mCsjBot.getAction().navi(new Gson().toJson(robotPose1.getPos()), new OnNaviListener() {
                     @Override
                     public void moveResult(String s) {
-                        mCsjBot.getTts().startSpeaking(robotPose1.getPoseName()+"已经到啦!",null);
+                        mCsjBot.getTts().startSpeaking(robotPose1.getPoseName() + "已经到啦!", null);
                     }
 
                     @Override
                     public void messageSendResult(String s) {
-                        Log.d("TAG","导航消息下发成功");
+                        Log.d("TAG", "导航消息下发成功");
                     }
 
                     @Override
@@ -279,18 +280,18 @@ public class DemoActivity extends AppCompatActivity {
         findViewById(R.id.bt_navi_point2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(robotPose2 == null){
+                if (robotPose2 == null) {
                     return;
                 }
                 mCsjBot.getAction().navi(new Gson().toJson(robotPose2.getPos()), new OnNaviListener() {
                     @Override
                     public void moveResult(String s) {
-                        mCsjBot.getTts().startSpeaking(robotPose2.getPoseName()+"已经到啦!",null);
+                        mCsjBot.getTts().startSpeaking(robotPose2.getPoseName() + "已经到啦!", null);
                     }
 
                     @Override
                     public void messageSendResult(String s) {
-                        Log.d("TAG","导航消息下发成功");
+                        Log.d("TAG", "导航消息下发成功");
                     }
 
 
@@ -319,7 +320,7 @@ public class DemoActivity extends AppCompatActivity {
 
     }
 
-    private void actionTest(){
+    private void actionTest() {
 
         // 机器人动作
         Action action = CsjRobot.getInstance().getAction();
@@ -328,7 +329,7 @@ public class DemoActivity extends AppCompatActivity {
         action.reset();
 
         // 肢体动作(bodyPart:肢体部位,action:对应动作)
-        action.action(2,6);// 低头
+        action.action(2, 6);// 低头
 
         // 开始左右摆手(intervalTime:间隔时间)
         action.startWaveHands(1000);
@@ -545,7 +546,7 @@ public class DemoActivity extends AppCompatActivity {
         action.moveBack();
     }
 
-    public void ttsTest(){
+    public void ttsTest() {
         // 机器人TTS
         ISpeechSpeak speak = CsjRobot.getInstance().getTts();
 
@@ -578,7 +579,7 @@ public class DemoActivity extends AppCompatActivity {
         CsjRobot.getInstance().setTts(null);
     }
 
-    public void speechTest(){
+    public void speechTest() {
         // 机器人语音
         Speech speech = CsjRobot.getInstance().getSpeech();
 
@@ -612,7 +613,7 @@ public class DemoActivity extends AppCompatActivity {
         });
     }
 
-    private void faceTest(){
+    private void faceTest() {
         // 机器人人脸识别
         Face face = CsjRobot.getInstance().getFace();
 
@@ -673,7 +674,7 @@ public class DemoActivity extends AppCompatActivity {
         });
     }
 
-    private void stateTest(){
+    private void stateTest() {
         // 机器人状态
         State state = CsjRobot.getInstance().getState();
 
@@ -745,7 +746,7 @@ public class DemoActivity extends AppCompatActivity {
         });
     }
 
-    private void expressionTest(){
+    private void expressionTest() {
         // 机器人表情
         Expression expression = CsjRobot.getInstance().getExpression();
 
@@ -782,7 +783,7 @@ public class DemoActivity extends AppCompatActivity {
         expression.sleepiness();
     }
 
-    private void versionTest(){
+    private void versionTest() {
         // 机器人版本信息
         Version version = CsjRobot.getInstance().getVersion();
 
@@ -838,7 +839,7 @@ public class DemoActivity extends AppCompatActivity {
         });
     }
 
-    private void extraTest(){
+    private void extraTest() {
         // 其他功能
         Extra extra = CsjRobot.getInstance().getExtra();
 

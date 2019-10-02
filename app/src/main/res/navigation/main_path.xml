@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_path"
+    app:startDestination="@id/menuFragment">
+
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.mirobotic.story.ui.fragments.MenuFragment"
+        android:label="fragment_menu"
+        tools:layout="@layout/fragment_menu">
+        <action
+            android:id="@+id/action_menuFragment_to_singFragment"
+            app:destination="@id/singFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_tabsFragment"
+            app:destination="@id/tabsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/singFragment"
+        android:name="com.mirobotic.story.ui.fragments.FilesFragment"
+        android:label="SingFragment"
+        tools:layout="@layout/fragment_sing">
+        <argument
+            android:name="type"
+            android:defaultValue="songs"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tabsFragment"
+        android:name="com.mirobotic.story.ui.fragments.TabsFragment"
+        android:label="TabsFragment"
+        tools:layout="@layout/fragment_tabs" >
+        <argument
+            android:name="type"
+            android:defaultValue="songs"
+            app:argType="string" />
+    </fragment>
+
+</navigation>
