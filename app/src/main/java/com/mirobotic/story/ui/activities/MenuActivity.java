@@ -20,9 +20,13 @@ import com.csjbot.coshandler.core.CsjRobot;
 import com.csjbot.coshandler.core.Speech;
 import com.csjbot.coshandler.core.State;
 import com.csjbot.coshandler.listener.OnGoRotationListener;
+import com.csjbot.coshandler.listener.OnSpeakListener;
+import com.csjbot.coshandler.listener.OnSpeechGetResultListener;
 import com.csjbot.coshandler.listener.OnSpeechListener;
 import com.csjbot.coshandler.listener.OnWakeupListener;
 import com.csjbot.coshandler.log.CsjlogProxy;
+import com.csjbot.coshandler.tts.ISpeechSpeak;
+import com.iflytek.cloud.SpeechError;
 import com.mirobotic.story.R;
 import com.mirobotic.story.app.UserDataProvider;
 import com.mirobotic.story.ui.fragments.MenuFragment;
@@ -112,7 +116,7 @@ public class MenuActivity extends AppCompatActivity implements OnActivityInterac
         mCsjBot.registerWakeupListener(new OnWakeupListener() {
             @Override
             public void response(int i) {
-                Log.d("TAG", "registerWakeupListener:i:" + i);
+                Log.d(TAG, "registerWakeupListener:i:" + i);
                 mCsjBot.getTts().startSpeaking("我在呢!", null);
                 mCsjBot.getAction().moveAngle(i, new OnGoRotationListener() {
                     @Override
@@ -140,7 +144,7 @@ public class MenuActivity extends AppCompatActivity implements OnActivityInterac
             public void speechInfo(String s, int i) {
 
                 // Simple parsing example
-                Log.d(TAG, "registerSpeechListener:s:" + s);
+                Log.d(TAG, "SPEECH >> " + s);
                 if (Speech.SPEECH_RECOGNITION_RESULT == i) {
                     // Identified information
                     try {
@@ -161,7 +165,48 @@ public class MenuActivity extends AppCompatActivity implements OnActivityInterac
             }
         });
 
+        ISpeechSpeak speak = mCsjBot.getTts();
 
+        // start speaking
+        speak.startSpeaking("Hello!, May i help you.", new OnSpeakListener() {
+            @Override
+            public void onSpeakBegin() {
+                // Before you speak
+                Log.e(TAG,"speaking started");
+            }
+
+            @Override
+            public void onCompleted(SpeechError speechError) {
+                // speak is complete
+                Log.e(TAG,"speaking end");
+            }
+        });
+
+        // robot voice
+        Speech speech = mCsjBot.getSpeech();
+
+        // Turn on the SMS service (it is enabled by default, no need to operate)
+        speech.startSpeechService();
+
+
+        // Manually get the answer to the question
+        speech.getResult("What is your name?", new OnSpeechGetResultListener() {
+            @Override
+            public void response(String s) {
+                Log.e(TAG,"SPEECH >> "+s);
+                showMessage(s);
+            }
+        });
+    }
+
+    private void showMessage(final String s){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context,s,Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
 

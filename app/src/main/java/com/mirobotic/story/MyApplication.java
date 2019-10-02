@@ -1,6 +1,7 @@
 package com.mirobotic.story;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.csjbot.coshandler.core.CsjRobot;
 
@@ -17,6 +18,7 @@ public class MyApplication extends Application {
         /**
          * 初始化SDK
          */
+        Log.e("MyApplication","ROBOT INITIALIZED");
         CsjRobot.getInstance().init(this);
     }
 }
