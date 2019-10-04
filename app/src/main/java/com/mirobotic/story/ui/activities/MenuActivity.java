@@ -1,9 +1,12 @@
 package com.mirobotic.story.ui.activities;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -29,6 +32,7 @@ import com.csjbot.coshandler.tts.ISpeechSpeak;
 import com.iflytek.cloud.SpeechError;
 import com.mirobotic.story.R;
 import com.mirobotic.story.app.UserDataProvider;
+import com.mirobotic.story.services.VoiceService;
 import com.mirobotic.story.ui.fragments.MenuFragment;
 
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +48,33 @@ public class MenuActivity extends AppCompatActivity implements OnActivityInterac
     private Context context;
     private EventListener eventListener;
     private UserDataProvider dataProvider;
+    private VoiceService voiceService;
+    private VoiceService.OnRobotResultListener resultListener = new VoiceService.OnRobotResultListener() {
+        @Override
+        public void onVoiceResult(final String voice) {
 
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, voice, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            VoiceService.RobotServiceBinder robotServiceBinder = (VoiceService.RobotServiceBinder) iBinder;
+            voiceService = robotServiceBinder.getService();
+            voiceService.connectRobot(resultListener);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +143,9 @@ public class MenuActivity extends AppCompatActivity implements OnActivityInterac
             }
         };
 
+        Intent intent = new Intent(this, VoiceService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+
         mCsjBot.registerWakeupListener(new OnWakeupListener() {
             @Override
             public void response(int i) {
@@ -139,64 +172,8 @@ public class MenuActivity extends AppCompatActivity implements OnActivityInterac
             }
         });
 
-        mCsjBot.registerSpeechListener(new OnSpeechListener() {
-            @Override
-            public void speechInfo(String s, int i) {
-
-                // Simple parsing example
-                Log.d(TAG, "SPEECH >> " + s);
-                if (Speech.SPEECH_RECOGNITION_RESULT == i) {
-                    // Identified information
-                    try {
-                        String text = new JSONObject(s).getString("text");
-                        Toast.makeText(context, "Recognized text:" + text, Toast.LENGTH_SHORT).show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else if (Speech.SPEECH_RECOGNITION_AND_ANSWER_RESULT == i) {
-                    // Recognized information and answers
-                    try {
-                        String say = new JSONObject(s).getJSONObject("result").getJSONObject("data").getString("say");
-                        Toast.makeText(context, "Acquired answer information:" + say, Toast.LENGTH_SHORT).show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        ISpeechSpeak speak = mCsjBot.getTts();
-
-        // start speaking
-        speak.startSpeaking("Hello!, May i help you.", new OnSpeakListener() {
-            @Override
-            public void onSpeakBegin() {
-                // Before you speak
-                Log.e(TAG,"speaking started");
-            }
-
-            @Override
-            public void onCompleted(SpeechError speechError) {
-                // speak is complete
-                Log.e(TAG,"speaking end");
-            }
-        });
-
-        // robot voice
-        Speech speech = mCsjBot.getSpeech();
-
-        // Turn on the SMS service (it is enabled by default, no need to operate)
-        speech.startSpeechService();
 
 
-        // Manually get the answer to the question
-        speech.getResult("What is your name?", new OnSpeechGetResultListener() {
-            @Override
-            public void response(String s) {
-                Log.e(TAG,"SPEECH >> "+s);
-                showMessage(s);
-            }
-        });
     }
 
     private void showMessage(final String s){
