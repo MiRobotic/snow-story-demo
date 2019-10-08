@@ -19,6 +19,7 @@ import com.csjbot.cosclient.entity.CommonPacket;
 import com.csjbot.cosclient.entity.MessagePacket;
 import com.csjbot.cosclient.listener.ClientEvent;
 import com.csjbot.cosclient.listener.EventListener;
+import com.csjbot.coshandler.core.Action;
 import com.csjbot.coshandler.core.CsjRobot;
 import com.csjbot.coshandler.core.Speech;
 import com.csjbot.coshandler.core.State;
@@ -34,12 +35,21 @@ import com.mirobotic.story.R;
 import com.mirobotic.story.app.UserDataProvider;
 import com.mirobotic.story.services.VoiceService;
 import com.mirobotic.story.ui.fragments.MenuFragment;
+import com.mirobotic.story.ui.fragments.TabsFragment;
+import com.mirobotic.story.ui.viewModels.MainViewModel;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Locale;
+
+import static com.mirobotic.story.app.Config.DIR_SONG;
+import static com.mirobotic.story.app.Config.DIR_STORY;
+import static com.mirobotic.story.app.Config.LANG_CANTONESE;
+import static com.mirobotic.story.app.Config.LANG_ENGLISH;
+import static com.mirobotic.story.app.Config.LANG_HOKKIEN;
+import static com.mirobotic.story.app.Config.LANG_MANDARIN;
 
 public class MenuActivity extends AppCompatActivity implements OnActivityInteraction {
 
@@ -49,6 +59,8 @@ public class MenuActivity extends AppCompatActivity implements OnActivityInterac
     private EventListener eventListener;
     private UserDataProvider dataProvider;
     private VoiceService voiceService;
+    private MainViewModel viewModel;
+    private MenuFragment menuFragment;
     private VoiceService.OnRobotResultListener resultListener = new VoiceService.OnRobotResultListener() {
         @Override
         public void onVoiceResult(final String voice) {
@@ -56,6 +68,8 @@ public class MenuActivity extends AppCompatActivity implements OnActivityInterac
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.e(TAG,"Voice Results > "+voice);
+                    processCommand(voice);
                     Toast.makeText(context, voice, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -88,8 +102,9 @@ public class MenuActivity extends AppCompatActivity implements OnActivityInterac
         mCsjBot = CsjRobot.getInstance();
 
         if (savedInstanceState == null) {
+            menuFragment = new MenuFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.nav_host_fragment,new MenuFragment());
+            ft.replace(R.id.nav_host_fragment,menuFragment);
             ft.commit();
 
 //            NavHostFragment host = NavHostFragment.create(R.navigation.main_path);
@@ -190,35 +205,71 @@ public class MenuActivity extends AppCompatActivity implements OnActivityInterac
     private void processCommand(String text) {
 
         Log.e(TAG, "COMMAND RECEIVED > " + text);
+        text = text.toLowerCase();
         if (text.contains("language")) {
 
-            if (text.contains("btnCan")) {
-                dataProvider.setLanguage("btnCan");
+            if (text.contains(LANG_CANTONESE)) {
+                dataProvider.setLanguage(LANG_CANTONESE);
                 dataProvider.setLanguageCode("cn");
 
                 changeLanguage();
 
-            } else if (text.contains("btnHok")) {
-                dataProvider.setLanguage("btnHok");
+            } else if (text.contains(LANG_HOKKIEN)) {
+                dataProvider.setLanguage(LANG_HOKKIEN);
                 dataProvider.setLanguageCode("cn");
                 changeLanguage();
-            } else if (text.contains("btnMan")) {
-                dataProvider.setLanguage("btnMan");
+            } else if (text.contains(LANG_MANDARIN)) {
+                dataProvider.setLanguage(LANG_MANDARIN);
                 dataProvider.setLanguageCode("cn");
                 changeLanguage();
-            } else if (text.contains("chinese")) {
-                dataProvider.setLanguage("chinese");
-                dataProvider.setLanguageCode("cn");
-                changeLanguage();
-            } else if (text.contains("btnEng")) {
+            } else if (text.contains(LANG_ENGLISH)) {
                 dataProvider.setLanguage("btnEng");
                 dataProvider.setLanguageCode("en");
                 changeLanguage();
             }
 
+        }else if (text.contains("sing") || text.contains("song")){
+
+            if (text.contains("start")){
+                playFile("song");
+            }else if(text.contains("stop")){
+                stopFile();
+            }
+
+        }else if (text.contains("dance")){
+            if (text.contains("start")){
+                startDance();
+            }else if(text.contains("stop")){
+                stopDance();
+            }
+        }else if (text.contains("story")){
+            if (text.contains("start")){
+                playFile("story");
+            }else if(text.contains("stop")){
+                stopFile();
+            }
+        }
+    }
+
+    private void playFile(String type){
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("autoPlay",true);
+        if (type.equals("song")){
+            bundle.putString("type", DIR_SONG);
+        }else {
+            bundle.putString("type", DIR_STORY);
         }
 
+        TabsFragment fragment = new TabsFragment();
+        fragment.setArguments(bundle);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.nav_host_fragment,fragment,"");
+        ft.addToBackStack("TabsFragment");
+        ft.commit();
+    }
 
+    private void stopFile(){
+        onBackPressed();
     }
 
     private void changeLanguage() {
@@ -252,5 +303,17 @@ public class MenuActivity extends AppCompatActivity implements OnActivityInterac
     @Override
     public void sendData(@NotNull String json) {
 
+    }
+
+    @Override
+    public void startDance() {
+        Action action = mCsjBot.getAction();
+        action.startDance();
+    }
+
+    @Override
+    public void stopDance() {
+        Action action = mCsjBot.getAction();
+        action.stopDance();
     }
 }

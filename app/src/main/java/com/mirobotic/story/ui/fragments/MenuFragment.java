@@ -36,7 +36,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     private boolean isDancing = false;
     private TextView tvDance;
     private boolean isVoiceRecognizing = false;
-
+    private TabsFragment fragment;
     public MenuFragment() {
         // Required empty public constructor
     }
@@ -111,44 +111,52 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         Log.e("Menu", "click " + view.getId());
 
         Bundle bundle = new Bundle();
+        bundle.putBoolean("autoPlay",true);
         if (view.getId() == R.id.cvSing) {
             bundle.putString("type", DIR_SONG);
-           showFragment(bundle);
+            showFragment(bundle);
         } else if (view.getId() == R.id.cvStory) {
             bundle.putString("type", DIR_STORY);
             showFragment(bundle);
         } else if (view.getId() == R.id.cvDance) {
-            JSONObject object = new JSONObject();
 
             if (isDancing) {
-                try {
-                    object.put("msg_id", Request.DANCE_STOP_REQ);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
                 tvDance.setText(getResources().getString(R.string.dance_start));
                 isDancing = false;
+
+                activityInteraction.stopDance();
             } else {
                 isDancing = true;
                 tvDance.setText(getResources().getString(R.string.dance_stop));
-                try {
-                    object.put("msg_id", Request.DANCE_START_REQ);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                activityInteraction.startDance();
+
             }
 
-            activityInteraction.sendData(object.toString());
         }
 
     }
 
 
     private void showFragment(Bundle bundle){
+        fragment = new TabsFragment();
+        fragment.setArguments(bundle);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.nav_host_fragment,new MenuFragment(),"");
-        ft.addToBackStack("MenuFragment");
+        ft.add(R.id.nav_host_fragment,fragment,"");
+        ft.addToBackStack("TabsFragment");
         ft.commit();
+    }
+
+    public void playSong(){
+        if (fragment!=null && fragment.isVisible()){
+            fragment.playSong();
+        }
+    }
+
+    public void stopSong(){
+        if (fragment!=null && fragment.isVisible()){
+            fragment.stopSong();
+        }
     }
 
 }

@@ -141,6 +141,11 @@ class MusicPlayerFragment(private var index: Int, private val list: ArrayList<Au
     }
 
     private fun playSong() {
+
+        if (list.isNullOrEmpty()){
+            return
+        }
+
         tvFileName.text = list[index].name
         audioLoader = AudioLoader(list[index])
         audioLoader.execute()

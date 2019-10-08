@@ -102,59 +102,37 @@ public class VoiceService extends Service {
             }
         });
 
-
-        mCsjBot.registerSpeechListener(new OnSpeechListener() {
+        new Thread(new Runnable() {
             @Override
-            public void speechInfo(String t, int i) {
+            public void run() {
+                mCsjBot.registerSpeechListener(new OnSpeechListener() {
+                    @Override
+                    public void speechInfo(String s, int i) {
 
-                // Simple parsing example
-                Log.d(TAG, "SPEECH >> " + t);
-                if (Speech.SPEECH_RECOGNITION_RESULT == i) {
-                    // Identified information
-                    try {
-                        String text = new JSONObject(t).getString("text");
-                        resultListener.onVoiceResult(text);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        // Simple parsing example
+                        Log.d(TAG, "SPEECH >> " + s);
+                        if (Speech.SPEECH_RECOGNITION_RESULT == i) {
+                            // Identified information
+                            try {
+                                String text = new JSONObject(s).getString("text");
+                                resultListener.onVoiceResult(text);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (Speech.SPEECH_RECOGNITION_AND_ANSWER_RESULT == i) {
+                            // Recognized information and answers
+                            try {
+                                String say = new JSONObject(s).getJSONObject("result").getJSONObject("data").getString("say");
+                                resultListener.onVoiceResult(say);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
-                } else if (Speech.SPEECH_RECOGNITION_AND_ANSWER_RESULT == i) {
-                    // Recognized information and answers
-                    try {
-                        String say = new JSONObject(t).getJSONObject("result").getJSONObject("data").getString("say");
-                        resultListener.onVoiceResult(say);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+                });
             }
-        });
+        }).start();
 
-
-        mCsjBot.registerSpeechListener(new OnSpeechListener() {
-            @Override
-            public void speechInfo(String s, int i) {
-
-                // Simple parsing example
-                Log.d(TAG, "SPEECH >> " + s);
-                if (Speech.SPEECH_RECOGNITION_RESULT == i) {
-                    // Identified information
-                    try {
-                        String text = new JSONObject(s).getString("text");
-                        resultListener.onVoiceResult(text);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else if (Speech.SPEECH_RECOGNITION_AND_ANSWER_RESULT == i) {
-                    // Recognized information and answers
-                    try {
-                        String say = new JSONObject(s).getJSONObject("result").getJSONObject("data").getString("say");
-                        resultListener.onVoiceResult(say);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
 
 
     }

@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.os.StrictMode
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
@@ -23,7 +24,8 @@ import com.mirobotic.story.app.Config.Companion.LANG_HOKKIEN
 import com.mirobotic.story.app.Config.Companion.LANG_MANDARIN
 import com.mirobotic.story.data.AudioModel
 import com.mirobotic.story.ui.adapter.FileListAdapter
-import com.mirobotic.story.ui.viewModels.MainViewModel
+import com.mirobotic.story.ui.viewModels.SongStoryViewModel
+import com.mirobotic.story.utils.FilesProvider
 import com.nbsp.materialfilepicker.MaterialFilePicker
 import com.nbsp.materialfilepicker.ui.FilePickerActivity
 import kotlinx.android.synthetic.main.fragment_sing.*
@@ -42,7 +44,7 @@ class FilesFragment : Fragment() {
     private var selectedFolder = ""
     private val mTag = "FilesFragment"
     private var type: String = ""
-    private lateinit var model: MainViewModel
+    private lateinit var model: SongStoryViewModel
     private var list: ArrayList<AudioModel> = arrayListOf()
     private var musicPlayerFragment: MusicPlayerFragment? = null
     private val filePickerRequest = 101
@@ -52,7 +54,7 @@ class FilesFragment : Fragment() {
         // Inflate the layout for this fragment
 
 
-        model = ViewModelProviders.of(this)[MainViewModel::class.java]
+        model = ViewModelProviders.of(this)[SongStoryViewModel::class.java]
 
 
         type = arguments!!.getString("type")!!
@@ -98,8 +100,9 @@ class FilesFragment : Fragment() {
 
         val path = "" + Environment.getExternalStorageDirectory().absolutePath + "/" + Config.MAIN_FOLDER + "/" + selectedFolder
 
-        Log.e("MainViewModel", "path > $path")
+        Log.e(mTag, "path > $path")
 
+        /*
         try {
             val projection = arrayOf(MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.TITLE, MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.ArtistColumns.ARTIST)
             val c = context.contentResolver.query(uri, projection, MediaStore.Audio.Media.DATA + " like '$path'", arrayOf("%utm%"), null)
@@ -113,8 +116,8 @@ class FilesFragment : Fragment() {
                             c.getString(2),
                             c.getString(3)
                     )
-                    Log.d("Name :${audioModel.name}", " Album :${audioModel.album}")
-                    Log.e("Path :${audioModel.path}", " Artist :${audioModel.artist}")
+                    Log.d(mTag,"Name :${audioModel.name} Album :${audioModel.album}")
+                    Log.e(mTag,"Path :${audioModel.path} Artist :${audioModel.artist}")
 
                     songs.add(audioModel)
                 }
@@ -123,26 +126,30 @@ class FilesFragment : Fragment() {
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
-        val itemSelectedListener = object : OnItemSelectedListener {
 
-            override fun onAudioSelected(index: Int, audio: AudioModel) {
-                if (musicPlayerFragment != null) {
-                    try {
-                        musicPlayerFragment!!.dismiss()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+        */
+
+        list = FilesProvider().getPlayList(path)
+
+        if (list.size > 0) {
+            val itemSelectedListener = object : OnItemSelectedListener {
+
+                override fun onAudioSelected(index: Int, audio: AudioModel) {
+                    if (musicPlayerFragment != null) {
+                        try {
+                            musicPlayerFragment!!.dismiss()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
-                }
 
-                musicPlayerFragment = MusicPlayerFragment(index, list)
-                musicPlayerFragment!!.show(childFragmentManager, MusicPlayerFragment::class.java.simpleName)
+                    musicPlayerFragment = MusicPlayerFragment(index, list)
+                    musicPlayerFragment!!.show(childFragmentManager, MusicPlayerFragment::class.java.simpleName)
+
+                }
 
             }
 
-        }
-
-
-        if (songs.size > 0) {
             val adapter = FileListAdapter(songs, itemSelectedListener, type)
             rvSongs.layoutManager = GridLayoutManager(context!!, 3)
             rvSongs.adapter = adapter
@@ -176,7 +183,7 @@ class FilesFragment : Fragment() {
             Thread(Runnable {
                 val filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH)
                 val destinationPath = "" + Environment.getExternalStorageDirectory() + "/" + Config.MAIN_FOLDER + "/" + selectedFolder + "/"
-                Log.e("file", "selected file >> $filePath")
+                Log.e(mTag, "selected file >> $filePath")
                 copyFileOrDirectory(filePath, destinationPath)
                 model.getFiles(selectedFolder)
             }).start()
@@ -227,6 +234,37 @@ class FilesFragment : Fragment() {
         } finally {
             source?.close()
             destination?.close()
+        }
+    }
+
+    fun playSong() {
+
+        if (!list.isNullOrEmpty()){
+            Log.e(mTag,"Playing Song...")
+            Handler().postDelayed({
+                if (musicPlayerFragment != null) {
+                    try {
+                        musicPlayerFragment!!.dismiss()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+                musicPlayerFragment = MusicPlayerFragment(0, list)
+                musicPlayerFragment!!.show(childFragmentManager, MusicPlayerFragment::class.java.simpleName)
+
+            },200)
+        }
+
+    }
+
+    fun stopSong(){
+        if (musicPlayerFragment != null) {
+            try {
+                musicPlayerFragment!!.dismiss()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 

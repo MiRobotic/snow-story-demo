@@ -3,6 +3,8 @@ package com.mirobotic.story.app;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import static com.mirobotic.story.app.Config.LANG_ENGLISH;
+
 public class UserDataProvider {
 
 
@@ -21,7 +23,7 @@ public class UserDataProvider {
     }
 
     public String getLanguageCode() {
-        return preferences.getString("lang", "");
+        return preferences.getString("lang", "en");
     }
 
     public void setLanguageCode(String language) {
@@ -31,7 +33,7 @@ public class UserDataProvider {
     }
 
     public String getLanguage() {
-        return preferences.getString("lang", "");
+        return preferences.getString("lang", LANG_ENGLISH);
     }
 
     public void setLanguage(String language) {

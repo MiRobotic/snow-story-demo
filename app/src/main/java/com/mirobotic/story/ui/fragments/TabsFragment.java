@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,13 +31,18 @@ import static com.mirobotic.story.app.Config.LANG_MANDARIN;
 public class TabsFragment extends Fragment {
 
     private String type;
+    private boolean autoPlay;
+    private FilesFragment fragmentMan, fragmentCan, fragmentHok, fragmentEng;
 
+    private final int POS_CAN=0,POS_ENG = 1, POS_HOK = 2, POS_MAN =3;
+    private int activePosition;
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         assert getArguments() != null;
         type = getArguments().getString("type");
+        autoPlay = getArguments().getBoolean("autoPlay");
         return inflater.inflate(R.layout.fragment_tabs, container, false);
     }
 
@@ -62,7 +68,7 @@ public class TabsFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    private void setupViewPager(ViewPager viewPager) {
+    private void setupViewPager(final ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
         Bundle bundleCan = new Bundle();
@@ -83,7 +89,6 @@ public class TabsFragment extends Fragment {
         bundleMan.putString("type", type);
         bundleMan.putString("lang", LANG_MANDARIN);
 
-        FilesFragment fragmentMan, fragmentCan, fragmentHok, fragmentEng;
 
         fragmentCan = new FilesFragment();
         fragmentEng = new FilesFragment();
@@ -102,44 +107,126 @@ public class TabsFragment extends Fragment {
         String titleHok = LANG_HOKKIEN.substring(0, 1).toUpperCase() + LANG_HOKKIEN.substring(1);
         String titleMan = LANG_MANDARIN.substring(0, 1).toUpperCase() + LANG_MANDARIN.substring(1);
 
+        adapter.addFragment(fragmentCan, titleCan);
+        adapter.addFragment(fragmentEng, titleEng);
+        adapter.addFragment(fragmentHok, titleHok);
+        adapter.addFragment(fragmentMan, titleMan);
+
+        final int pos;
         switch (dataProvider.getLanguage()) {
             case LANG_CANTONESE:
-                adapter.addFragment(fragmentCan, titleCan);
-
-                adapter.addFragment(fragmentEng, titleEng);
-                adapter.addFragment(fragmentHok, titleHok);
-                adapter.addFragment(fragmentMan, titleMan);
+                pos = 0;
                 break;
             case LANG_ENGLISH:
-                adapter.addFragment(fragmentEng, titleEng);
-
-                adapter.addFragment(fragmentCan, titleCan);
-                adapter.addFragment(fragmentHok, titleHok);
-                adapter.addFragment(fragmentMan, titleMan);
-
+                pos = 1;
                 break;
             case LANG_HOKKIEN:
-                adapter.addFragment(fragmentHok, titleHok);
-
-                adapter.addFragment(fragmentCan, titleCan);
-                adapter.addFragment(fragmentEng, titleEng);
-                adapter.addFragment(fragmentMan, titleMan);
-
+                pos = 2;
                 break;
-            case LANG_MANDARIN:
-                adapter.addFragment(fragmentMan, titleMan);
-
-                adapter.addFragment(fragmentCan, titleCan);
-                adapter.addFragment(fragmentEng, titleEng);
-                adapter.addFragment(fragmentHok, titleHok);
-
+            default:
+                pos = 3;
                 break;
         }
 
+        activePosition = pos;
 
         viewPager.setAdapter(adapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                activePosition = position;
+                if (autoPlay){
+                    switch (position){
+                        case POS_CAN:
+                            fragmentCan.playSong();
+                            break;
+                        case POS_ENG:
+                            fragmentEng.playSong();
+                            break;
+                        case POS_HOK:
+                            fragmentHok.playSong();
+                            break;
+                        case POS_MAN:
+                            fragmentMan.playSong();
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
+        viewPager.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                viewPager.setCurrentItem(pos);
+            }
+        }, 100);
+
     }
 
+    public void playSong() {
+        Log.e("TABS","Playing Song at "+activePosition);
+        switch (activePosition){
+            case POS_CAN:
+                if (fragmentCan!=null && fragmentCan.isVisible()){
+                    fragmentCan.playSong();
+                }
+                break;
+            case POS_ENG:
+                if (fragmentEng!=null && fragmentEng.isVisible()){
+                    fragmentEng.playSong();
+                }
+                break;
+            case POS_HOK:
+                if (fragmentHok!=null && fragmentHok.isVisible()){
+                    fragmentHok.playSong();
+                }
+                break;
+            case POS_MAN:
+                if (fragmentMan!=null && fragmentMan.isVisible()){
+                    fragmentMan.playSong();
+                }
+                break;
+        }
+    }
+
+
+    public void stopSong() {
+        Log.e("TABS","Stopping Song at "+activePosition);
+        switch (activePosition){
+            case POS_CAN:
+                if (fragmentCan!=null && fragmentCan.isVisible()){
+                    fragmentCan.stopSong();
+                }
+                break;
+            case POS_ENG:
+                if (fragmentEng!=null && fragmentEng.isVisible()){
+                    fragmentEng.stopSong();
+                }
+                break;
+            case POS_HOK:
+                if (fragmentHok!=null && fragmentHok.isVisible()){
+                    fragmentHok.stopSong();
+                }
+                break;
+            case POS_MAN:
+                if (fragmentMan!=null && fragmentMan.isVisible()){
+                    fragmentMan.stopSong();
+                }
+                break;
+        }
+    }
 
     class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
